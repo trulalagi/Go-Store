@@ -1,17 +1,479 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="css/utama.css"/>
-  <script src="logika/utama.js"></script>
-  <title>Trulala Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APK Store - Download Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .search-container {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 30px;
+            background: #fff;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .apk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .apk-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .apk-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .apk-icon {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .apk-icon::before {
+            content: '📱';
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+
+        .apk-content {
+            padding: 20px;
+        }
+
+        .apk-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .apk-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .apk-size {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .apk-date {
+            color: #888;
+        }
+
+        .download-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .apk-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <div id="nav">
-    <img src="gambar/ikon.png"/>
-  </div>
-  <div id="grid" class="grid-container"></div>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 APK Store</h1>
+            <p>Download aplikasi Android terbaru dan terpercaya</p>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Cari aplikasi..." id="searchInput">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="totalApps">0</span>
+                <span class="stat-label">Total Aplikasi</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="totalSize">0 MB</span>
+                <span class="stat-label">Total Ukuran</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="lastUpdate">-</span>
+                <span class="stat-label">Update Terakhir</span>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Memuat daftar aplikasi...</p>
+        </div>
+
+        <div class="apk-grid" id="apkGrid">
+            <!-- APK cards will be generated here -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">📭</div>
+            <h3>Tidak ada aplikasi ditemukan</h3>
+            <p>Coba gunakan kata kunci pencarian yang berbeda</p>
+        </div>
+    </div>
+
+    <script>
+        // Sample APK data - In real implementation, this would come from server
+        let apkFiles = [
+            {
+                name: "WhatsApp Business.apk",
+                size: "45.2 MB",
+                date: "2025-01-15",
+                path: "/apk/whatsapp-business.apk",
+                icon: "💬"
+            },
+            {
+                name: "Instagram Lite.apk", 
+                size: "12.8 MB",
+                date: "2025-01-10",
+                path: "/apk/instagram-lite.apk",
+                icon: "📷"
+            },
+            {
+                name: "TikTok Lite.apk",
+                size: "28.5 MB", 
+                date: "2025-01-08",
+                path: "/apk/tiktok-lite.apk",
+                icon: "🎵"
+            },
+            {
+                name: "Shopee.apk",
+                size: "67.3 MB",
+                date: "2025-01-05",
+                path: "/apk/shopee.apk", 
+                icon: "🛒"
+            },
+            {
+                name: "Gojek.apk",
+                size: "89.1 MB",
+                date: "2025-01-03",
+                path: "/apk/gojek.apk",
+                icon: "🏍️"
+            },
+            {
+                name: "Grab.apk",
+                size: "72.4 MB", 
+                date: "2025-01-01",
+                path: "/apk/grab.apk",
+                icon: "🚗"
+            }
+        ];
+
+        let filteredApks = [...apkFiles];
+
+        // Initialize the app
+        function init() {
+            showLoading(true);
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                loadApkFiles();
+                updateStats();
+                showLoading(false);
+            }, 1000);
+
+            setupSearch();
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('apkGrid').style.display = show ? 'none' : 'grid';
+        }
+
+        // Load and display APK files
+        function loadApkFiles() {
+            const grid = document.getElementById('apkGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (filteredApks.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
+
+            filteredApks.forEach(apk => {
+                const card = createApkCard(apk);
+                grid.appendChild(card);
+            });
+        }
+
+        // Create APK card element
+        function createApkCard(apk) {
+            const card = document.createElement('div');
+            card.className = 'apk-card';
+            
+            card.innerHTML = `
+                <div class="apk-icon">
+                    <div style="font-size: 4rem; opacity: 0.8;">${apk.icon}</div>
+                </div>
+                <div class="apk-content">
+                    <div class="apk-name">${apk.name}</div>
+                    <div class="apk-info">
+                        <span class="apk-size">${apk.size}</span>
+                        <span class="apk-date">${formatDate(apk.date)}</span>
+                    </div>
+                    <a href="${apk.path}" class="download-btn" download>
+                        📥 Download APK
+                    </a>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                
+                filteredApks = apkFiles.filter(apk => 
+                    apk.name.toLowerCase().includes(query)
+                );
+                
+                loadApkFiles();
+                updateStats();
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalApps').textContent = filteredApks.length;
+            
+            const totalSize = filteredApks.reduce((sum, apk) => {
+                const size = parseFloat(apk.size.replace(' MB', ''));
+                return sum + size;
+            }, 0);
+            
+            document.getElementById('totalSize').textContent = totalSize.toFixed(1) + ' MB';
+            
+            if (filteredApks.length > 0) {
+                const latestDate = filteredApks.reduce((latest, apk) => {
+                    return apk.date > latest ? apk.date : latest;
+                }, filteredApks[0].date);
+                
+                document.getElementById('lastUpdate').textContent = formatDate(latestDate);
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        // In real implementation, you would fetch APK files from server
+        // function fetchApkFiles() {
+        //     fetch('/api/apk-files')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             apkFiles = data;
+        //             filteredApks = [...apkFiles];
+        //             loadApkFiles();
+        //             updateStats();
+        //         })
+        //         .catch(error => {
+        //             console.error('Error fetching APK files:', error);
+        //         });
+        // }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
